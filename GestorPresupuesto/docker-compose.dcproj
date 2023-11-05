@@ -6,7 +6,7 @@
     <ProjectGuid>d7172877-bc72-4d66-847b-5fc10b6b4ec1</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/swagger</DockerServiceUrl>
-    <DockerServiceName>microserviciogastos</DockerServiceName>
+    <DockerServiceName>microservicioreport</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
     <None Include="docker-compose.override.yml">

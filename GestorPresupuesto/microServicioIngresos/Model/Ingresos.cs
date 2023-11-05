@@ -1,6 +1,6 @@
-﻿namespace Model
+﻿namespace Ingresos
 {
-    public class Ingresos
+    public class IngresosModel
     {
         public int Id { get; set; }
         public DateTime Fecha { get; set; }
@@ -10,7 +10,7 @@
         public int Monto { get; set;}
 
 
-        public Ingresos(int id, DateTime fecha, string tipo, string descripcion, int monto)
+        public IngresosModel(int id, DateTime fecha, string tipo, string descripcion, int monto)
         {
             Id = id;
             Fecha = fecha;
@@ -19,7 +19,7 @@
             Monto = monto;
         }
 
-        public Ingresos()
+        public IngresosModel()
         {
         }
 

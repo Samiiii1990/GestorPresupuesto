@@ -1,6 +1,6 @@
 ﻿@page "/gestor"
 @using System.Text.Json;
-@using Model;
+@using Reporte;
 @using System.Text;
 
 <PageTitle>Gestor Presupuesto</PageTitle>
@@ -9,7 +9,7 @@
 
 
 
-@if (_gastos.Count == 0)
+@if (_reporte.Count == 0)
 {
     <p><em>Loading...</em></p>
 }
@@ -23,17 +23,23 @@ else
                 <th>Tipo</th>
                 <th>Descripcion</th>
                 <th>Monto</th>
+                <th>Total</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var _gasto in _gastos)
+            @foreach (var _dato in _reporte)
             {
                 <tr>
-                    <td>@_gasto.Id</td>
-                    <td>@_gasto.Fecha</td>
-                    <td>@_gasto.Tipo</td>
-                    <td>@_gasto.Descripcion</td>
-                    <td>@_gasto.Monto</td>
+                    <td>@_dato.Id</td>
+                    <td>@_dato.Fecha</td>
+                    <td>@_dato.TipoGasto || @_dato.TipoIngreso</td>
+                    <td>@_dato.DescripcionGasto || @_dato.DescripcionIngreso</td>
+                    <td>@_dato.MontoGasto || @_dato.MontoIngreso</td>
+                    <td>@_dato.Diferencia</td>
+
+
+
+
                 </tr>
             }
         </tbody>
@@ -42,36 +48,38 @@ else
 
 
 
-<button class="btn btn-primary" @onclick="CargarGastos">Procesar</button>
+<button class="btn btn-primary" @onclick="CargarDatos">Generar Reporte</button>
 
 
 @code {
     private String currentCount;
-    private List<Gastos> _gastos = new List<Gastos>();
+    private List<ReporteModel> _reporte = new List<ReporteModel>();
 
 
-    private void CargarGastos()
+
+    private void CargarDatos()
     {
-        GetGasto();
+        GetReporte();
     }
 
 
-    public async Task GetGasto()
+    public async Task GetReporte()
     {
 
         using (var client = new HttpClient())
         {
             try
             {
-                var result = await client.GetAsync("http://host.docker.internal:4000/api/Gastos/");
+                var result = await client.GetAsync("http://host.docker.internal:6000/api/Reporte/");
                 if (result.IsSuccessStatusCode)
                 {
-                    var resultadoServicio = await result.Content.ReadAsStringAsync();
-                    var res = JsonSerializer.Deserialize<List<Gastos>>(resultadoServicio, new JsonSerializerOptions(){ PropertyNameCaseInsensitive = true});
+                    var resultadoServicioReporte = await result.Content.ReadAsStringAsync();
+                    var res = JsonSerializer.Deserialize<List<ReporteModel>>(resultadoServicioReporte, new JsonSerializerOptions(){ PropertyNameCaseInsensitive = true});
 
-                    _gastos = res;
+                    _reporte = res;
                     StateHasChanged();
                 }
+                
             }
             catch (Exception ex)
             {

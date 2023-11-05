@@ -1,6 +1,6 @@
-﻿namespace Model
+﻿namespace Gastos
 {
-    public class Gastos
+    public class GastosModel
     {
         public int Id { get; set; }
         public DateTime Fecha { get; set; }
@@ -10,7 +10,7 @@
         public int Monto { get; set;}
 
 
-        public Gastos(int id, DateTime fecha, string tipo, string descripcion, int monto)
+        public GastosModel(int id, DateTime fecha, string tipo, string descripcion, int monto)
         {
             Id = id;
             Fecha = fecha;
@@ -19,7 +19,7 @@
             Monto = monto;
         }
 
-        public Gastos()
+        public GastosModel()
         {
         }
 

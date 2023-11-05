@@ -18,6 +18,13 @@ services:
     build:
       context: .
       dockerfile: microServicioIngresos/Dockerfile
+  
+  microservicioreporte:
+    image: ${DOCKER_REGISTRY-}microservicioreporte
+    build:
+      context: .
+      dockerfile: microServicioReporte/Dockerfile
+
 
 
   
