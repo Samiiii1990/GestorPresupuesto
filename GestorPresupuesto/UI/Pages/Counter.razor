@@ -1,0 +1,267 @@
+﻿@page "/counter"
+@using System.Text.Json;
+@using Model;
+@using System.Text;
+
+<PageTitle>Counter</PageTitle>
+
+<h1>Counter</h1>
+
+<p role="status">Current count: @currentCount</p>
+<p role="status">Current count: @currentCount2</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me Get</button>
+<button class="btn btn-primary" @onclick="IncrementCount2">Click me Send</button>
+<button class="btn btn-primary" @onclick="obtener_token_post">Token</button>
+
+@if (_personas.Count == 0)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Edad</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var _persona in _personas)
+            {
+                <tr>
+                    <td>@_persona.Nombre</td>
+                    <td>@_persona.Apellido</td>
+                    <td>@_persona.Edad</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<p role="status">Current count: @msjPersona</p>
+
+<button class="btn btn-primary" @onclick="CargarPersonas">Procesar Personsa</button>
+<button class="btn btn-primary" @onclick="SetPersona">Enviar Persona</button>
+<button class="btn btn-primary" @onclick="CargarPersonas">Procesar Personsa</button>
+
+@code {
+    private String currentCount;
+    private String currentCount2;
+    private String msjPersona;
+    private int _count = 1;
+    private List<Persona> _personas = new List<Persona>();
+
+
+
+    private void IncrementCount()
+    {
+
+        _count++;
+        EsPar();
+    }
+
+    private void IncrementCount2()
+    {
+        _count++;
+        EsPar2();
+    }
+
+    private void CargarPersonas()
+    {
+        GetPersona();
+    }
+
+    public async Task obtener_token_post()
+    {
+        using (var client = new HttpClient())
+        {
+            string url = "https://sandbox.epagos.com.ar/post.php";
+
+            var values = new Dictionary<string, string>
+                {
+                    { "id_usuario", "1555" },
+                    { "id_organismo", "3191" },
+                    { "password", "4856dc478cc2b15ea897b96d4e532cba" },
+                    { "hash", "cf537079a75521b2cd48929d7225f2d6" }
+                };
+
+            var content = new FormUrlEncodedContent(values);
+
+            var response = await client.PostAsync(url, content);
+
+            var responseString = await response.Content.ReadAsStringAsync();
+
+            var res = JsonSerializer.Deserialize<Dictionary<string, string>>(responseString);
+
+            //var requestMsj = new HttpRequestMessage(HttpMethod.Post, url);
+
+            // requestMsj.Headers.Add("id_usuario", "1555");
+            // requestMsj.Headers.Add("id_organismo", "3191");
+            // requestMsj.Headers.Add("password", "4856dc478cc2b15ea897b96d4e532cba");
+            // requestMsj.Headers.Add("hash", "cf537079a75521b2cd48929d7225f2d6");
+            // var result = await client.SendAsync(requestMsj);
+            // if (result.IsSuccessStatusCode)
+            // {
+            //     var resultadoServicio = await result.Content.ReadAsStringAsync();
+            //     var res = JsonSerializer.Deserialize<bool>(resultadoServicio);
+            //     //var createdCompany = await JsonSerializer.DeserializeAsync<bool>(result);
+            //     //var resultadoServicio = result.Content.ReadAsStringAsync().Result;
+            //     //currentCount = result.Content.ReadAsStringAsync().Result;
+            //     //Console.WriteLine(result.StatusCode);
+            //     //currentCount2 = _count.ToString() + " es un numero primo " + res.ToString();
+            //     //StateHasChanged();
+            // }
+        }
+
+        // var fields = new
+        // {
+        //     id_usuario = _id_usuario,
+        //     id_organismo = _id_organismo,
+        //     password = password,
+        //     hash = hash
+        // };
+        // var post_field_string = new FormUrlEncodedContent(fields);
+        // using var client = new HttpClient();
+        // client.Timeout = TimeSpan.FromSeconds(10);
+        // client.DefaultRequestHeaders.Add("User-Agent", "EPagos");
+        // var response = await client.PostAsync(get_url_token(), post_field_string);
+
+        // // control de error HTTP
+        // var resultado = await response.Content.ReadAsStringAsync();
+
+        // if (resultado.TryGetProperty("token", out var token))
+        //     _token = token.GetString();
+
+
+    }
+    
+
+
+    public async Task EsPar()
+    {
+
+        using (var client = new HttpClient())
+        {
+            try
+            {
+                var result = await client.GetAsync("http://host.docker.internal:4000/api/NumeroPar/" + _count.ToString());
+                if (result.IsSuccessStatusCode)
+                {
+                    var resultadoServicio = await result.Content.ReadAsStringAsync();
+                    var res = JsonSerializer.Deserialize<bool>(resultadoServicio);
+
+                    currentCount = _count.ToString() + " es un numero primo " + res.ToString();
+                    StateHasChanged();
+                }
+            }
+            catch (Exception ex)
+            {
+                currentCount = ex.Message;
+            }
+        }
+    }
+
+    public async Task EsPar2()
+    {
+        using (var client = new HttpClient())
+        {
+            try
+            {
+                using (var requestMsj = new HttpRequestMessage(HttpMethod.Get, "http://host.docker.internal:4000/api/NumeroPar/"))
+                {
+                    requestMsj.Headers.Add("v", _count.ToString());
+
+                    var result = await client.SendAsync(requestMsj);
+                    if (result.IsSuccessStatusCode)
+                    {
+                        var resultadoServicio = await result.Content.ReadAsStringAsync();
+                        var res = JsonSerializer.Deserialize<bool>(resultadoServicio);
+                        //var createdCompany = await JsonSerializer.DeserializeAsync<bool>(result);
+                        //var resultadoServicio = result.Content.ReadAsStringAsync().Result;
+                        //currentCount = result.Content.ReadAsStringAsync().Result;
+                        //Console.WriteLine(result.StatusCode);
+                        currentCount2 = _count.ToString() + " es un numero primo " + res.ToString();
+                        StateHasChanged();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                currentCount = ex.Message;
+            }
+        }
+    }
+
+    public async Task GetPersona()
+    {
+
+        using (var client = new HttpClient())
+        {
+            try
+            {
+                var result = await client.GetAsync("http://host.docker.internal:5000/api/Persona/");
+                if (result.IsSuccessStatusCode)
+                {
+                    var resultadoServicio = await result.Content.ReadAsStringAsync();
+                    var res = JsonSerializer.Deserialize<List<Persona>>(resultadoServicio, new JsonSerializerOptions(){ PropertyNameCaseInsensitive = true});
+                    //var createdCompany = await JsonSerializer.DeserializeAsync<bool>(result);
+                    //var resultadoServicio = result.Content.ReadAsStringAsync().Result;
+                    //currentCount = result.Content.ReadAsStringAsync().Result;
+                    //Console.WriteLine(result.StatusCode);
+                    //currentCount = _count.ToString() + " es un numero primo " + res.ToString();
+
+                    _personas = res;
+                    StateHasChanged();
+                }
+            }
+            catch (Exception ex)
+            {
+                currentCount = ex.Message;
+            }
+        }
+    }
+
+    public async Task SetPersona()
+    {
+
+        using (var client = new HttpClient())
+        {
+            try
+            {
+                var persona = new Persona();
+                persona.Nombre = "Juan";
+                persona.Apellido = "Perez";
+                persona.Edad = 30;
+
+                var result = await client.PostAsJsonAsync("http://host.docker.internal:5000/api/Persona/", persona);
+
+                if (result.IsSuccessStatusCode)
+                {
+                    msjPersona = "Persona1 creada";
+                }
+
+                persona = new Persona();
+                persona.Nombre = "Jorge";
+                persona.Apellido = "Perez";
+                persona.Edad = 35;
+
+                var json = JsonSerializer.Serialize(persona);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                result = await client.PostAsync("http://host.docker.internal:5000/api/Persona/", content);
+
+                if (result.IsSuccessStatusCode)
+                {
+                    msjPersona += " Persona2 creada";
+                }
+            }
+            catch (Exception ex)
+            {
+                msjPersona = ex.Message;
+            }
+        }
+    }
+
+}
