@@ -15,12 +15,13 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.13" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.4" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+     <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
       <ProjectReference Include="../microServicioReporte/Model/Model.csproj" />
-       <ProjectReference Include="../microServicioGastos/Model/Model.csproj" />
-        <ProjectReference Include="../microServicioIngresos/Model/Model.csproj" />
+       <ProjectReference Include="../microServicioGastos/microServicioGastos.csproj" />
+      <ProjectReference Include="../microServicioIngresos/microServicioIngresos.csproj" />
   </ItemGroup>
 
 </Project>

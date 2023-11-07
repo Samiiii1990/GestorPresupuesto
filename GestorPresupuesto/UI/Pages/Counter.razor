@@ -1,6 +1,6 @@
 ﻿@page "/gestor"
 @using System.Text.Json;
-@using Reporte;
+@using microServicioReporte.Model;
 @using System.Text;
 
 <PageTitle>Gestor Presupuesto</PageTitle>
@@ -53,7 +53,7 @@ else
 
 @code {
     private String currentCount;
-    private List<ReporteModel> _reporte = new List<ReporteModel>();
+    private List<Reporte> _reporte = new List<Reporte>();
 
 
 
@@ -74,7 +74,7 @@ else
                 if (result.IsSuccessStatusCode)
                 {
                     var resultadoServicioReporte = await result.Content.ReadAsStringAsync();
-                    var res = JsonSerializer.Deserialize<List<ReporteModel>>(resultadoServicioReporte, new JsonSerializerOptions(){ PropertyNameCaseInsensitive = true});
+                    var res = JsonSerializer.Deserialize<List<Reporte>>(resultadoServicioReporte, new JsonSerializerOptions(){ PropertyNameCaseInsensitive = true});
 
                     _reporte = res;
                     StateHasChanged();

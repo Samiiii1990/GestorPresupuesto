@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
-using microServicioGastos.Model.Gastos;
-using microServicioIngresos.Model.Ingresos;
+using microServicioGastos.Model;
+using microServicioIngresos.Model;
+using microServicioReporte.Model;
 using System.Text;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 namespace microServicioReporte.Controllers
@@ -10,12 +11,15 @@ namespace microServicioReporte.Controllers
     [ApiController]
     public class ReporteController : ControllerBase
     {
-        // GET: api/<ReporteController>
+
+        
+        private List<Gastos> _gastos = new List<Gastos>();
+
+        private List<Ingresos> _ingresos = new List<Ingresos>();
+
+        private String currentCount;
+
         [HttpGet]
-        private List<GastosModel> _gastos = new List<GastosModel>();
-
-        private List<IngresosModel> _ingresos = new List<IngresosModel>();
-
         public async Task GetGasto()
         {
             using (var client = new HttpClient())
@@ -32,12 +36,12 @@ namespace microServicioReporte.Controllers
                         var res1 =
                             JsonSerializer
                                 .Deserialize
-                                <List<GastosModel>>(resultadoServicioGastos,
+                                <List<Gastos>>(resultadoServicioGastos,
                                 new JsonSerializerOptions()
                                 { PropertyNameCaseInsensitive = true });
 
                         _gastos = res1;
-                        StateHasChanged();
+
                     }
 
                     var resultIngresos =
@@ -50,12 +54,12 @@ namespace microServicioReporte.Controllers
                         var res2 =
                             JsonSerializer
                                 .Deserialize
-                                <List<IngresosModel>>(resultadoServicioIngresos,
+                                <List<Ingresos>>(resultadoServicioIngresos,
                                 new JsonSerializerOptions()
                                 { PropertyNameCaseInsensitive = true });
 
                         _ingresos = res2;
-                        StateHasChanged();
+
                     }
                 }
                 catch (Exception ex)
@@ -65,7 +69,7 @@ namespace microServicioReporte.Controllers
             }
         }
 
-        public async Task<List<ReporteModel>> Get()
+        public async Task<List<Reporte>> Get()
         {
             var reporte =
                 (

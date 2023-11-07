@@ -1,6 +1,6 @@
-﻿namespace Ingresos
+﻿namespace microServicioIngresos.Model
 {
-    public class IngresosModel
+    public class Ingresos
     {
         public int Id { get; set; }
         public DateTime Fecha { get; set; }
@@ -10,7 +10,7 @@
         public int Monto { get; set;}
 
 
-        public IngresosModel(int id, DateTime fecha, string tipo, string descripcion, int monto)
+        public Ingresos(int id, DateTime fecha, string tipo, string descripcion, int monto)
         {
             Id = id;
             Fecha = fecha;
@@ -19,7 +19,7 @@
             Monto = monto;
         }
 
-        public IngresosModel()
+        public Ingresos()
         {
         }
 

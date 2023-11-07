@@ -1,6 +1,6 @@
-﻿namespace Gastos
+﻿namespace microServicioGastos.Model
 {
-    public class GastosModel
+    public class Gastos
     {
         public int Id { get; set; }
         public DateTime Fecha { get; set; }
@@ -10,7 +10,7 @@
         public int Monto { get; set;}
 
 
-        public GastosModel(int id, DateTime fecha, string tipo, string descripcion, int monto)
+        public Gastos(int id, DateTime fecha, string tipo, string descripcion, int monto)
         {
             Id = id;
             Fecha = fecha;
@@ -19,7 +19,7 @@
             Monto = monto;
         }
 
-        public GastosModel()
+        public Gastos()
         {
         }
 

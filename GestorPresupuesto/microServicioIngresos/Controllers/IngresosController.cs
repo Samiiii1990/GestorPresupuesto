@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Ingresos;
+using microServicioIngresos.Model;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -9,18 +9,18 @@ namespace microServicioIngresos.Controllers
     [ApiController]
     public class IngresosController : ControllerBase
     {
-        // GET: api/<IngresosModelController>
+        // GET: api/<IngresosController>
         [HttpGet]
-    public async Task<List<IngresosModel>> Get()
+    public async Task<List<Ingresos>> Get()
     {
 
-        List<IngresosModel> ingresos = new List<IngresosModel>
+        List<Ingresos> ingresos = new List<Ingresos>
         {
-            new IngresosModel { Id = 1, Fecha = DateTime.Now, Tipo = "Venta", Monto = -1000, Descripcion = "Venta 1" },
-            new IngresosModel { Id = 2, Fecha = DateTime.Now, Tipo = "Venta", Monto = -1000, Descripcion = "Venta 2" },
-            new IngresosModel { Id = 3, Fecha = DateTime.Now, Tipo = "Venta", Monto = -1000, Descripcion = "Venta 3" },
-            new IngresosModel { Id = 4, Fecha = DateTime.Now, Tipo = "Venta", Monto = -1000, Descripcion = "Venta 4" },
-            new IngresosModel { Id = 5, Fecha = DateTime.Now, Tipo = "Venta", Monto = -1000, Descripcion = "Venta 5" }
+            new Ingresos { Id = 1, Fecha = DateTime.Now, Tipo = "Venta", Monto = -1000, Descripcion = "Venta 1" },
+            new Ingresos { Id = 2, Fecha = DateTime.Now, Tipo = "Venta", Monto = -1000, Descripcion = "Venta 2" },
+            new Ingresos { Id = 3, Fecha = DateTime.Now, Tipo = "Venta", Monto = -1000, Descripcion = "Venta 3" },
+            new Ingresos { Id = 4, Fecha = DateTime.Now, Tipo = "Venta", Monto = -1000, Descripcion = "Venta 4" },
+            new Ingresos { Id = 5, Fecha = DateTime.Now, Tipo = "Venta", Monto = -1000, Descripcion = "Venta 5" }
         };
 
         return ingresos;

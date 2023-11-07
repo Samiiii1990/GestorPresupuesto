@@ -1,6 +1,6 @@
-﻿namespace Reporte
+﻿namespace microServicioReporte.Model
 {
-    public class ReporteModel
+    public class Reporte
     {
     public int Id { get; set; }
     public DateTime Fecha { get; set; }
@@ -12,7 +12,7 @@
     public string DescripcionIngreso { get; set; }
     public decimal Diferencia { get; set; }
 
-        public ReporteModel(int id, DateTime fecha, string tipoGasto, decimal montoGasto, string descripcionGasto, string tipoIngreso, decimal montoIngreso, string descripcionIngreso, decimal diferencia)
+        public Reporte(int id, DateTime fecha, string tipoGasto, decimal montoGasto, string descripcionGasto, string tipoIngreso, decimal montoIngreso, string descripcionIngreso, decimal diferencia)
         {
             Id = id;
             Fecha = fecha;
@@ -25,7 +25,7 @@
             Diferencia = diferencia;
         }
 
-        public ReporteModel()
+        public Reporte()
         {
         }
 

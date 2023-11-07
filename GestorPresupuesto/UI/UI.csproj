@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../microServicioReporte/Model/Model.csproj" />
+    <ProjectReference Include="../microServicioReporte/microServicioReporte.csproj" />
   </ItemGroup>
 
 </Project>
