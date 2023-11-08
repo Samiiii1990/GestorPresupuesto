@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "microServicioReporte", "microServicioReporte\microServicioReporte.csproj", "{832DFF24-48A4-4744-94CA-E20C4FE71161}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GestorPresupuesto", "GestorPresupuesto/GestorPresupuesto.csproj", "{832DFF24-48A4-4744-94CA-E20C4FE71161}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

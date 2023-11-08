@@ -7,14 +7,6 @@ services:
     ports:
       - "5002:80"
     depends_on:
-        - microservicioreporte
-
-  microservicioreporte:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-    ports:
-      - "6000:80"
-    depends_on:
         - microserviciogastos
         - microservicioingresos
 
