@@ -15,63 +15,42 @@
 else
 {
     <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Fecha</th>
-                <th>Tipo</th>
-                <th>Descripcion</th>
-                <th>Monto</th>
-                <th>Total</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var _gasto in _gastos)
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Fecha</th>
+            <th>Tipo</th>
+            <th>Descripcion</th>
+            <th>Monto</th>
+            <!-- Additional columns specific to Gastos -->
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in combinedList)
             {
                 <tr>
-                    <td>@_gasto.Id</td>
-                    <td>@_gasto.Fecha</td>
-                    <td>@_gasto.Tipo</td>
-                    <td>@_gasto.Descripcion</td>
-                    <td>@_gasto.Monto</td>
+                    <td>@item.Id</td>
+                    <td>@item.Fecha</td>
+                    <td>@item.Tipo</td>
+                    <td>@item.Descripcion</td>
+                    <td>@item.Monto</td>
+                    <!-- Additional columns specific to Gastos -->
                 </tr>
             }
         </tbody>
     </table>
-        <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Fecha</th>
-                <th>Tipo</th>
-                <th>Descripcion</th>
-                <th>Monto</th>
-                <th>Total</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var _ingreso in _ingresos)
-            {
-                <tr>
-                    <td>@_ingreso.Id</td>
-                    <td>@_ingreso.Fecha</td>
-                    <td>@_ingreso.Tipo</td>
-                    <td>@_ingreso.Descripcion</td>
-                    <td>@_ingreso.Monto</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-    }
+}
 <button class="btn btn-primary" @onclick="CargarDatos">Generar Reporte</button>
 
 @code {
-    private List<Gastos> _gastos = new List<Gastos>();
-    private List<Ingresos> _ingresos = new List<Ingresos>();
+    private List<Modelo> _gastos = new List<Modelo>();
+    private List<Modelo> _ingresos = new List<Modelo>();
+    private List<Modelo> combinedList = new List<Modelo>();
 
     private void CargarDatos()
     {
         GetReporte();
+        combinedList = _gastos.Concat(_ingresos).ToList();
     }
 
 
@@ -85,36 +64,36 @@ else
             {
                 var result = await client.GetAsync("http://host.docker.internal:4000/api/Gastos/");
                 if (result.IsSuccessStatusCode)
-                 {
-                        var resultadoServicioGastos =
-                            await result.Content.ReadAsStringAsync();
-                        var res1 =
-                            JsonSerializer
-                                .Deserialize
-                                <List<Gastos>>(resultadoServicioGastos,
-                                new JsonSerializerOptions()
-                                { PropertyNameCaseInsensitive = true });
+                {
+                    var resultadoServicioGastos =
+                    await result.Content.ReadAsStringAsync();
+                    var res1 =
+                    JsonSerializer
+                    .Deserialize
+                    <List<Modelo>>(resultadoServicioGastos,
+                    new JsonSerializerOptions()
+                        { PropertyNameCaseInsensitive = true });
 
-                        _gastos = res1;
+                    _gastos = res1;
 
-                    }
-                    var resultIngresos =
-                        await client
-                            .GetAsync("http://host.docker.internal:5000/api/Ingresos/");
-                    if (resultIngresos.IsSuccessStatusCode)
-                    {
-                        var resultadoServicioIngresos =
-                            await resultIngresos.Content.ReadAsStringAsync();
-                        var res2 =
-                            JsonSerializer
-                                .Deserialize
-                                <List<Ingresos>>(resultadoServicioIngresos,
-                                new JsonSerializerOptions()
-                                { PropertyNameCaseInsensitive = true });
+                }
+                var resultIngresos =
+                await client
+                .GetAsync("http://host.docker.internal:5000/api/Ingresos/");
+                if (resultIngresos.IsSuccessStatusCode)
+                {
+                    var resultadoServicioIngresos =
+                    await resultIngresos.Content.ReadAsStringAsync();
+                    var res2 =
+                    JsonSerializer
+                    .Deserialize
+                    <List<Modelo>>(resultadoServicioIngresos,
+                    new JsonSerializerOptions()
+                        { PropertyNameCaseInsensitive = true });
 
-                        _ingresos = res2;
+                    _ingresos = res2;
 
-                    }
+                }
             }
             catch (Exception ex)
             {

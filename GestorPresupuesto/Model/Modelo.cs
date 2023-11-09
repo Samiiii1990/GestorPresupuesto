@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Model
 {
  
-    public class Gastos
+     public class Modelo
     {
         public int Id { get; set; }
         public DateTime Fecha { get; set; }
@@ -18,7 +18,7 @@ namespace Model
         public int Monto { get; set;}
 
 
-        public Gastos(int id, DateTime fecha, string tipo, string descripcion, int monto)
+        public Modelo(int id, DateTime fecha, string tipo, string descripcion, int monto)
         {
             Id = id;
             Fecha = fecha;
@@ -27,7 +27,7 @@ namespace Model
             Monto = monto;
         }
 
-        public Gastos()
+        public Modelo()
         {
         }
 

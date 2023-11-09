@@ -10,18 +10,18 @@ namespace microServicioGastos.Controllers
     [ApiController]
     public class GastosController : ControllerBase
     {
-        // GET: api/<GastosController>
+        // GET: api/<ModeloController>
         [HttpGet]
-    public async Task<List<Gastos>> Get()
+    public async Task<List<Modelo>> Get()
     {
 
-        List<Gastos> gastos = new List<Gastos>
+        List<Modelo> gastos = new List<Modelo>
         {
-            new Gastos { Id = 1, Fecha = DateTime.Now, Tipo = "Compra", Monto = 1000, Descripcion = "Gasto 1" },
-            new Gastos { Id = 2, Fecha = DateTime.Now, Tipo = "Compra", Monto = 3000, Descripcion = "Gasto 2" },
-            new Gastos { Id = 3, Fecha = DateTime.Now, Tipo = "Compra", Monto = 5000, Descripcion = "Gasto 3" },
-            new Gastos { Id = 4, Fecha = DateTime.Now, Tipo = "Compra", Monto = 7000, Descripcion = "Gasto 4" },
-            new Gastos { Id = 5, Fecha = DateTime.Now, Tipo = "Compra", Monto = 9000, Descripcion = "Gasto 5" }
+            new Modelo { Id = 1, Fecha = DateTime.Now, Tipo = "Compra", Monto = 1000, Descripcion = "Gasto 1" },
+            new Modelo { Id = 2, Fecha = DateTime.Now, Tipo = "Compra", Monto = 3000, Descripcion = "Gasto 2" },
+            new Modelo { Id = 3, Fecha = DateTime.Now, Tipo = "Compra", Monto = 5000, Descripcion = "Gasto 3" },
+            new Modelo { Id = 4, Fecha = DateTime.Now, Tipo = "Compra", Monto = 7000, Descripcion = "Gasto 4" },
+            new Modelo { Id = 5, Fecha = DateTime.Now, Tipo = "Compra", Monto = 9000, Descripcion = "Gasto 5" }
         };
 
         return gastos;
