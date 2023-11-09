@@ -5,7 +5,7 @@
 
 <PageTitle>GestorPresupuesto</PageTitle>
 
-<h1>GestorPresupuesto</h1>
+<h1>Gestor Presupuesto</h1>
 
 
 @if (_gastos.Count == 0)
@@ -15,28 +15,39 @@
 else
 {
     <table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Fecha</th>
-            <th>Tipo</th>
-            <th>Descripcion</th>
-            <th>Monto</th>
-            <!-- Additional columns specific to Gastos -->
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in combinedList)
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Fecha</th>
+                <th>Tipo</th>
+                <th>Descripcion</th>
+                <th>Monto</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                decimal runningTotal = 0;
+            }
+            @foreach (var item in SortedList)
             {
                 <tr>
                     <td>@item.Id</td>
-                    <td>@item.Fecha</td>
+                    <td>@item.Fecha.ToString("dd/MM/yyyy")</td>
                     <td>@item.Tipo</td>
                     <td>@item.Descripcion</td>
-                    <td>@item.Monto</td>
-                    <!-- Additional columns specific to Gastos -->
+                    <td>@(item.Tipo == "Ingreso" ? item.Monto : -item.Monto)</td>
+                    @{
+                        runningTotal += item.Tipo == "Ingreso" ? item.Monto : -item.Monto;
+                    }
+                    <td>@runningTotal</td>
                 </tr>
+                
             }
+            <tr>
+                <td colspan="5"><strong>Total:</strong></td>
+                <td><strong>@SortedList.Sum(item => item.Tipo == "Ingreso" ? item.Monto : -item.Monto)</strong></td>
+            </tr>
         </tbody>
     </table>
 }
@@ -46,14 +57,14 @@ else
     private List<Modelo> _gastos = new List<Modelo>();
     private List<Modelo> _ingresos = new List<Modelo>();
     private List<Modelo> combinedList = new List<Modelo>();
+    private List<Modelo> SortedList = new List<Modelo>();
 
     private void CargarDatos()
     {
         GetReporte();
         combinedList = _gastos.Concat(_ingresos).ToList();
+        SortedList = combinedList.OrderBy(o=>o.Fecha).ToList();
     }
-
-
 
     public async Task GetReporte()
     {

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Model;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 namespace microServicioGastos.Controllers
 {
     [Route("api/[controller]")]
@@ -17,40 +16,39 @@ namespace microServicioGastos.Controllers
                     new Modelo {
                         Id = 1,
                         Fecha = new DateTime(2023, 11, 11),
-                        Tipo = "Compra",
-                        Monto = 1000,
-                        Descripcion = "Gasto 1"
+                        Tipo = "Gasto",
+                        Monto = 20000,
+                        Descripcion = "Comida en restaurante"
                     },
                     new Modelo {
                         Id = 2,
                         Fecha = new DateTime(2023, 11, 19),
-                        Tipo = "Compra",
-                        Monto = 3000,
-                        Descripcion = "Gasto 2"
+                        Tipo = "Gasto",
+                        Monto = 10000,
+                        Descripcion = "Combustible para el auto"
                     },
                     new Modelo {
                         Id = 3,
                         Fecha = new DateTime(2023, 11, 12),
-                        Tipo = "Compra",
+                        Tipo = "Gasto",
                         Monto = 5000,
-                        Descripcion = "Gasto 3"
+                        Descripcion = "Entradas de cine"
                     },
                     new Modelo {
                         Id = 4,
                         Fecha = new DateTime(2023, 11, 5),
-                        Tipo = "Compra",
-                        Monto = 7000,
-                        Descripcion = "Gasto 4"
+                        Tipo = "Gasto",
+                        Monto = 35000,
+                        Descripcion = "Ropa y accesorios"
                     },
                     new Modelo {
                         Id = 5,
                         Fecha = new DateTime(2023, 11, 30),
-                        Tipo = "Compra",
-                        Monto = 9000,
-                        Descripcion = "Gasto 5"
+                        Tipo = "Gasto",
+                        Monto = 50000,
+                        Descripcion = "Pago de servicios"
                     }
                 };
-
             return gastos;
         }
     }

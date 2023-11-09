@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Model;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+
 namespace microServicioIngresos.Controllers
 {
     [Route("api/[controller]")]
@@ -17,37 +17,37 @@ namespace microServicioIngresos.Controllers
                     new Modelo {
                         Id = 1,
                         Fecha = new DateTime(2023, 11, 2),
-                        Tipo = "Venta",
-                        Monto = 1000,
-                        Descripcion = "Venta 1"
+                        Tipo = "Ingreso",
+                        Monto = 100000,
+                        Descripcion = "Venta de productos"
                     },
                     new Modelo {
                         Id = 2,
                         Fecha = new DateTime(2023, 11, 4),
-                        Tipo = "Venta",
-                        Monto = 1000,
-                        Descripcion = "Venta 2"
+                        Tipo = "Ingreso",
+                        Monto = 15000,
+                        Descripcion = "Venta de servicios"
                     },
                     new Modelo {
                         Id = 3,
                         Fecha = new DateTime(2023, 11, 7),
-                        Tipo = "Venta",
-                        Monto = 1000,
-                        Descripcion = "Venta 3"
+                        Tipo = "Ingreso",
+                        Monto = 20000,
+                        Descripcion = "Bonificación"
                     },
                     new Modelo {
                         Id = 4,
                         Fecha = new DateTime(2023, 11, 9),
-                        Tipo = "Venta",
-                        Monto = 1000,
-                        Descripcion = "Venta 4"
+                        Tipo = "Ingreso",
+                        Monto = 120000,
+                        Descripcion = "Venta de productos electrónicos"
                     },
                     new Modelo {
                         Id = 5,
                         Fecha = new DateTime(2023, 11, 22),
-                        Tipo = "Venta",
-                        Monto = 000,
-                        Descripcion = "Venta 5"
+                        Tipo = "Ingreso",
+                        Monto = 80000,
+                        Descripcion = "Ingresos por inversiones"
                     }
                 };
 
