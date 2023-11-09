@@ -12,44 +12,58 @@
 {
     <p><em>No hay datos para mostrar...</em></p>
 }
+
 else
 {
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Fecha</th>
-                <th>Tipo</th>
-                <th>Descripcion</th>
-                <th>Monto</th>
-                <th>Total</th>
-            </tr>
-        </thead>
-        <tbody>
-            @{
-                decimal runningTotal = 0;
-            }
-            @foreach (var item in SortedList)
-            {
+    @if (isLoading)
+    {
+        <div class="text-center">
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div>
+    }
+    else
+    {
+
+
+        <table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Fecha</th>
+            <th>Tipo</th>
+            <th>Descripcion</th>
+            <th>Monto</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+                    decimal runningTotal = 0;
+                }
+                @foreach (var item in SortedList)
+                {
+                    <tr>
+                        <td>@item.Id</td>
+                        <td>@item.Fecha.ToString("dd/MM/yyyy")</td>
+                        <td>@item.Tipo</td>
+                        <td>@item.Descripcion</td>
+                        <td>$@(item.Tipo == "Ingreso" ? item.Monto : -item.Monto)</td>
+                        @{
+                            runningTotal += item.Tipo == "Ingreso" ? item.Monto : -item.Monto;
+                        }
+                        <td>$@runningTotal</td>
+                    </tr>
+
+                }
                 <tr>
-                    <td>@item.Id</td>
-                    <td>@item.Fecha.ToString("dd/MM/yyyy")</td>
-                    <td>@item.Tipo</td>
-                    <td>@item.Descripcion</td>
-                    <td>$@(item.Tipo == "Ingreso" ? item.Monto : -item.Monto)</td>
-                    @{
-                        runningTotal += item.Tipo == "Ingreso" ? item.Monto : -item.Monto;
-                    }
-                    <td>$@runningTotal</td>
+                    <td colspan="5" style="text-align: end;"><strong>Total:</strong></td>
+                    <td><strong>$@SortedList.Sum(item => item.Tipo == "Ingreso" ? item.Monto : -item.Monto)</strong></td>
                 </tr>
-                
-            }
-            <tr>
-                <td colspan="5"><strong>Total:</strong></td>
-                <td><strong>$@SortedList.Sum(item => item.Tipo == "Ingreso" ? item.Monto : -item.Monto)</strong></td>
-            </tr>
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    }
 }
 <button class="btn btn-primary" @onclick="CargarDatos">Generar Reporte</button>
 
@@ -58,14 +72,23 @@ else
     private List<Modelo> _ingresos = new List<Modelo>();
     private List<Modelo> combinedList = new List<Modelo>();
     private List<Modelo> SortedList = new List<Modelo>();
+    private bool isLoading = false;
 
-    private void CargarDatos()
+    private async Task CargarDatos()
     {
-        GetReporte();
-        combinedList = _gastos.Concat(_ingresos).ToList();
-        SortedList = combinedList.OrderBy(o=>o.Fecha).ToList();
-    }
+        if (!isLoading)
+        {
+            isLoading = true;
 
+            await Task.Delay(2000);
+
+            await GetReporte();
+            combinedList = _gastos.Concat(_ingresos).ToList();
+            SortedList = combinedList.OrderBy(o => o.Fecha).ToList();
+
+            isLoading = false;
+        }
+    }
     public async Task GetReporte()
     {
 
@@ -112,7 +135,5 @@ else
             }
         }
     }
-
-
 
 }
