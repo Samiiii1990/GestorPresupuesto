@@ -19,5 +19,9 @@ services:
       context: .
       dockerfile: microServicioIngresos/Dockerfile
 
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
   
 

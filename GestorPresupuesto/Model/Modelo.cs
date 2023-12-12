@@ -4,21 +4,36 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace Model
 {
- 
-     public class Modelo
+    public class Modelo
     {
-        public int Id { get; set; }
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string Id { get; set; }
+
+        [BsonElement("Date")]
         public DateTime Fecha { get; set; }
+
+        [BsonElement("Type")]
         public string Tipo { get; set; }
-        
+
+        [BsonElement("Description")]
         public string Descripcion { get; set; }
-        public int Monto { get; set;}
 
+        [BsonElement("Mount")]
+        public int Monto { get; set; }
 
-        public Modelo(int id, DateTime fecha, string tipo, string descripcion, int monto)
+        public Modelo(
+            string id,
+            DateTime fecha,
+            string tipo,
+            string descripcion,
+            int monto
+        )
         {
             Id = id;
             Fecha = fecha;
@@ -37,4 +52,3 @@ namespace Model
         }
     }
 }
-

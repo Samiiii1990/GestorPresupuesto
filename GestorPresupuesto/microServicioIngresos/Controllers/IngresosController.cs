@@ -1,57 +1,89 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Model;
-
+using MongoDB.Driver;
 
 namespace microServicioIngresos.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class IngresosController : ControllerBase
     {
-        // GET: api/<ModeloController>
-        [HttpGet]
-        public async Task<List<Modelo>> Get()
-        {
-            List<Modelo> ingresos =
-                new List<Modelo> {
-                    new Modelo {
-                        Id = 1,
-                        Fecha = new DateTime(2023, 11, 2),
-                        Tipo = "Ingreso",
-                        Monto = 100000,
-                        Descripcion = "Venta de productos"
-                    },
-                    new Modelo {
-                        Id = 2,
-                        Fecha = new DateTime(2023, 11, 4),
-                        Tipo = "Ingreso",
-                        Monto = 15000,
-                        Descripcion = "Venta de servicios"
-                    },
-                    new Modelo {
-                        Id = 3,
-                        Fecha = new DateTime(2023, 11, 7),
-                        Tipo = "Ingreso",
-                        Monto = 20000,
-                        Descripcion = "Bonificación"
-                    },
-                    new Modelo {
-                        Id = 4,
-                        Fecha = new DateTime(2023, 11, 9),
-                        Tipo = "Ingreso",
-                        Monto = 120000,
-                        Descripcion = "Venta de productos electrónicos"
-                    },
-                    new Modelo {
-                        Id = 5,
-                        Fecha = new DateTime(2023, 11, 22),
-                        Tipo = "Ingreso",
-                        Monto = 80000,
-                        Descripcion = "Ingresos por inversiones"
-                    }
-                };
+        private readonly MongoDBContext _context;
 
-            return ingresos;
+        public IngresosController(MongoDBContext context)
+        {
+            _context = context;
+        }
+
+        [HttpGet]
+        public async Task<IEnumerable<Modelo>> Get()
+        {
+            return await _context.Ingresos.Find(_ => true).ToListAsync();
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Modelo>> Get(string id)
+        {
+            var ingreso =
+                await _context
+                    .Ingresos
+                    .Find(p => p.Id == id)
+                    .FirstOrDefaultAsync();
+
+            if (ingreso == null)
+            {
+                return NotFound();
+            }
+
+            return ingreso;
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Modelo>> Create(Modelo ingreso)
+        {
+            await _context.Ingresos.InsertOneAsync(ingreso);
+            return CreatedAtRoute(new { id = ingreso.Id }, ingreso);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(string id, Modelo ingresoIn)
+        {
+            var ingreso =
+                await _context
+                    .Ingresos
+                    .Find(p => p.Id == id)
+                    .FirstOrDefaultAsync();
+
+            if (ingreso == null)
+            {
+                return NotFound();
+            }
+
+            await _context.Ingresos.ReplaceOneAsync(p => p.Id == id, ingresoIn);
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            var ingreso =
+                await _context
+                    .Ingresos
+                    .Find(p => p.Id == id)
+                    .FirstOrDefaultAsync();
+
+            if (ingreso == null)
+            {
+                return NotFound();
+            }
+
+            await _context.Ingresos.DeleteOneAsync(p => p.Id == id);
+
+            return NoContent();
         }
     }
 }

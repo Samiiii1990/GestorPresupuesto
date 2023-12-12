@@ -1,55 +1,89 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Model;
+using MongoDB.Driver;
 
 namespace microServicioGastos.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class GastosController : ControllerBase
     {
-        // GET: api/<ModeloController>
-        [HttpGet]
-        public async Task<List<Modelo>> Get()
+        private readonly MongoDBContext _context;
+
+        public GastosController(MongoDBContext context)
         {
-            List<Modelo> gastos =
-                new List<Modelo> {
-                    new Modelo {
-                        Id = 1,
-                        Fecha = new DateTime(2023, 11, 11),
-                        Tipo = "Gasto",
-                        Monto = 20000,
-                        Descripcion = "Comida en restaurante"
-                    },
-                    new Modelo {
-                        Id = 2,
-                        Fecha = new DateTime(2023, 11, 19),
-                        Tipo = "Gasto",
-                        Monto = 10000,
-                        Descripcion = "Combustible para el auto"
-                    },
-                    new Modelo {
-                        Id = 3,
-                        Fecha = new DateTime(2023, 11, 12),
-                        Tipo = "Gasto",
-                        Monto = 5000,
-                        Descripcion = "Entradas de cine"
-                    },
-                    new Modelo {
-                        Id = 4,
-                        Fecha = new DateTime(2023, 11, 5),
-                        Tipo = "Gasto",
-                        Monto = 35000,
-                        Descripcion = "Ropa y accesorios"
-                    },
-                    new Modelo {
-                        Id = 5,
-                        Fecha = new DateTime(2023, 11, 30),
-                        Tipo = "Gasto",
-                        Monto = 50000,
-                        Descripcion = "Pago de servicios"
-                    }
-                };
-            return gastos;
+            _context = context;
+        }
+
+        [HttpGet]
+        public async Task<IEnumerable<Modelo>> Get()
+        {
+            return await _context.Gastos.Find(_ => true).ToListAsync();
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Modelo>> Get(string id)
+        {
+            var gasto =
+                await _context
+                    .Gastos
+                    .Find(p => p.Id == id)
+                    .FirstOrDefaultAsync();
+
+            if (gasto == null)
+            {
+                return NotFound();
+            }
+
+            return gasto;
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Modelo>> Create(Modelo gasto)
+        {
+            await _context.Gastos.InsertOneAsync(gasto);
+            return CreatedAtRoute(new { id = gasto.Id }, gasto);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(string id, Modelo gastoIn)
+        {
+            var gasto =
+                await _context
+                    .Gastos
+                    .Find(p => p.Id == id)
+                    .FirstOrDefaultAsync();
+
+            if (gasto == null)
+            {
+                return NotFound();
+            }
+
+            await _context.Gastos.ReplaceOneAsync(p => p.Id == id, gastoIn);
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            var gasto =
+                await _context
+                    .Gastos
+                    .Find(p => p.Id == id)
+                    .FirstOrDefaultAsync();
+
+            if (gasto == null)
+            {
+                return NotFound();
+            }
+
+            await _context.Gastos.DeleteOneAsync(p => p.Id == id);
+
+            return NoContent();
         }
     }
 }
