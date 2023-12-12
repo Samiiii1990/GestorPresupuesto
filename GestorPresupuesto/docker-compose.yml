@@ -12,6 +12,11 @@ services:
     build:
       context: .
       dockerfile: microServicioGastos/Dockerfile
+    depends_on:
+      - mongo
+    networks:
+      mynetwork:
+        ipv4_address: 178.25.0.3
   
   microservicioingresos:
     image: ${DOCKER_REGISTRY-}microservicioingresos
@@ -19,9 +24,15 @@ services:
       context: .
       dockerfile: microServicioIngresos/Dockerfile
 
-  mongodb:
+  mongo:
     image: mongo:latest
-    ports:
-      - "27017:27017"
-  
+    networks:
+      mynetwork:
+        ipv4_address: 178.25.0.2
 
+networks:
+  mynetwork:
+    driver: bridge
+    ipam:
+      config:
+      - subnet: 178.25.0.0/24
