@@ -1,0 +1,60 @@
+@page "/editar/{id}"
+@using Model
+@inject NavigationManager NavigationManager
+
+<PageTitle>Editar Gasto</PageTitle>
+
+<h1>Editar Gasto</h1>
+
+@if (gasto != null)
+{
+    <form>
+        <div class="mb-3">
+            <label for="nombre" class="form-label">Descripcion:</label>
+            <input type="text" class="form-control" id="description" @bind="gasto.Descripcion" />
+        </div>
+        <div class="mb-3">
+            <label for="correo" class="form-label">Monto:</label>
+            <input type="text" class="form-control" id="monto" @bind="gasto.Monto" />
+        </div>
+
+        <button type="button" class="btn btn-success" @onclick="ConfirmarEdicion">Confirmar</button>
+        <button type="button" class="btn btn-danger" @onclick="CancelarEdicion">Cancelar</button>
+    </form>
+}
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    private Modelo gasto;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var httpClient = new HttpClient();
+
+        var gastoResponse = await httpClient.GetFromJsonAsync<Modelo>($"http://host.docker.internal:4000/api/Gastos/{Id}");
+        if (gastoResponse != null)
+        {
+            gasto = gastoResponse;
+        }
+    }
+
+    private async Task ConfirmarEdicion()
+    {
+        var httpClient = new HttpClient();
+
+        var response = await httpClient.PutAsJsonAsync($"http://host.docker.internal:4000/api/Gastos/{Id}", gasto);
+        
+        if (response.IsSuccessStatusCode)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+    }
+
+    private void CancelarEdicion()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+
+}

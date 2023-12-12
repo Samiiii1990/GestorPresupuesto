@@ -2,6 +2,8 @@
 @using System.Text.Json;
 @using Model;
 @using System.Text;
+@using System.Net;
+@inject NavigationManager NavigationManager
 
 <PageTitle>GestorPresupuesto</PageTitle>
 
@@ -36,6 +38,7 @@ else
             <th>Descripcion</th>
             <th>Monto</th>
             <th>Total</th>
+            <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
@@ -54,6 +57,10 @@ else
                             runningTotal += item.Tipo == "Ingreso" ? item.Monto : -item.Monto;
                         }
                         <td>$@runningTotal</td>
+                        <td>
+                            <button class="btn btn-warning" @onclick="() => EditarGasto(item.Id)"><i class="bi bi-pencil"></i></button>
+                            <button class="btn btn-danger" @onclick="() => EliminarGasto(item.Id)"><i class="bi bi-trash"></i></button>
+                        </td>
                     </tr>
 
                 }
@@ -135,5 +142,32 @@ else
             }
         }
     }
+    private void EditarGasto(string gastoId)
+    {
+        NavigationManager.NavigateTo($"/editar/{gastoId}");
+    }
+    private async Task EliminarGasto(string id)
+    {
+        var httpClient = new HttpClient();
+
+        try
+        {
+            var response = await httpClient.DeleteAsync($"http://host.docker.internal:4000/api/Gastos/{id}");
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                var gastosResponse = await httpClient.GetFromJsonAsync<List<Modelo>>("http://host.docker.internal:4000/api/Gastos");
+                if (gastosResponse != null)
+                {
+                    _gastos = gastosResponse;
+                }
+            }
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al eliminar gasto: {ex.Message}");
+        }
+    }
+
 
 }
