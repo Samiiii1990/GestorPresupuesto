@@ -34,6 +34,7 @@ else
     <thead>
         <tr>
             <th>Id</th>
+            <th>Fecha</th>
             <th>Tipo</th>
             <th>Descripcion</th>
             <th>Monto</th>
@@ -49,6 +50,7 @@ else
                 {
                     <tr>
                         <td>@item.Id</td>
+                        <td>@item.Fecha.ToString("dd/MM/yyyy")</td>
                         <td>@item.Tipo</td>
                         <td>@item.Descripcion</td>
                         <td>$@(item.Tipo == "Ingreso" ? item.Monto : -item.Monto)</td>
@@ -90,7 +92,8 @@ else
             isLoading = true;
 
             await GetReporte();
-            SortedList = _gastos.Concat(_ingresos).ToList();
+            combinedList = _gastos.Concat(_ingresos).ToList();
+            SortedList = combinedList.OrderBy(o => o.Fecha).ToList();
 
 
             isLoading = false;
@@ -187,7 +190,6 @@ else
                     _gastos = gastosResponse;
                 }
             }
-
         }
         catch (Exception ex)
         {
@@ -210,7 +212,6 @@ else
                     _ingresos = ingresosResponse;
                 }
             }
-
         }
         catch (Exception ex)
         {
