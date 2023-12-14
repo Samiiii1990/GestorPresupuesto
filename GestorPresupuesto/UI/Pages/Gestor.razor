@@ -10,7 +10,7 @@
 <h1>Gestor Presupuesto</h1>
 
 
-@if (_gastos.Count == 0)
+@if (_gastos.Count == 0 && _ingresos.Count == 0)
 {
     <p><em>No hay datos para mostrar...</em></p>
 }
@@ -58,7 +58,7 @@ else
                         }
                         <td>$@runningTotal</td>
                         <td>
-                            <button class="btn btn-warning" @onclick="() => EditarGasto(item.Id)">Editar</button>
+                            <button class="btn btn-warning" @onclick="() => EditarGasto(item.Tipo,item.Id)">Editar</button>
                             <button class="btn btn-danger" @onclick="() => EliminarGasto(item.Id)">Eliminar</button>
                         </td>
                     </tr>
@@ -72,7 +72,7 @@ else
         </table>
     }
 }
-<button class="btn btn-primary" @onclick="CargarDatos">Generar Reporte</button>
+
 
 @code {
     private List<Modelo> _gastos = new List<Modelo>();
@@ -81,21 +81,21 @@ else
     private List<Modelo> SortedList = new List<Modelo>();
     private bool isLoading = false;
 
-    private async Task CargarDatos()
+    protected override async Task OnInitializedAsync()
     {
-        if (!isLoading)
+         if (!isLoading)
         {
             isLoading = true;
 
-            await Task.Delay(2000);
-
             await GetReporte();
-            combinedList = _gastos.Concat(_ingresos).ToList();
-            SortedList = combinedList.OrderBy(o => o.Fecha).ToList();
+            SortedList = _gastos.Concat(_ingresos).ToList();
+
 
             isLoading = false;
         }
     }
+
+
     public async Task GetReporte()
     {
 
@@ -142,9 +142,9 @@ else
             }
         }
     }
-    private void EditarGasto(string gastoId)
+    private void EditarGasto(string tipo, string gastoId)
     {
-        NavigationManager.NavigateTo($"/editar/{gastoId}");
+        NavigationManager.NavigateTo($"/editar/{tipo}/{gastoId}");
     }
     private async Task EliminarGasto(string id)
     {

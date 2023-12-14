@@ -23,6 +23,11 @@ services:
     build:
       context: .
       dockerfile: microServicioIngresos/Dockerfile
+    depends_on:
+      - mongo
+    networks:
+      mynetwork:
+        ipv4_address: 178.25.0.4
 
   mongo:
     image: mongo:latest

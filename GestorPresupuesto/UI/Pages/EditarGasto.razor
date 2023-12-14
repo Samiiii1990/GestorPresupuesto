@@ -1,57 +1,97 @@
-@page "/editar/{id}"
+@page "/editar/{tipo}/{id}"
 @using Model
 @inject NavigationManager NavigationManager
 
-<PageTitle>Editar Gasto</PageTitle>
+<PageTitle>Editar</PageTitle>
 
-<h1>Editar Gasto</h1>
+<h1>Editar Movimiento</h1>
 
 @if (gasto != null)
 {
     <form>
-        <div class="mb-3">
-            <label for="nombre" class="form-label">Descripcion:</label>
-            <input type="text" class="form-control" id="description" @bind="gasto.Descripcion" />
-        </div>
-        <div class="mb-3">
-            <label for="correo" class="form-label">Monto:</label>
-            <input type="text" class="form-control" id="monto" @bind="gasto.Monto" />
-        </div>
+    <div class="mb-3">
+        <label for="nombre" class="form-label">Descripcion:</label>
+        <input type="text" class="form-control" id="description" @bind="gasto.Descripcion" />
+    </div>
+    <div class="mb-3">
+        <label for="correo" class="form-label">Monto:</label>
+        <input type="text" class="form-control" id="monto" @bind="gasto.Monto" />
+    </div>
 
-        <button type="button" class="btn btn-success" @onclick="ConfirmarEdicion">Confirmar</button>
-        <button type="button" class="btn btn-danger" @onclick="CancelarEdicion">Cancelar</button>
-    </form>
+    <button type="button" class="btn btn-success" @onclick="ConfirmarEdicionGasto">Confirmar</button>
+    <button type="button" class="btn btn-danger" @onclick="CancelarEdicion">Cancelar</button>
+</form>
+}
+@if (ingreso != null)
+{
+    <form>
+    <div class="mb-3">
+        <label for="nombre" class="form-label">Descripcion:</label>
+        <input type="text" class="form-control" id="description" @bind="ingreso.Descripcion" />
+    </div>
+    <div class="mb-3">
+        <label for="correo" class="form-label">Monto:</label>
+        <input type="text" class="form-control" id="monto" @bind="ingreso.Monto" />
+    </div>
+
+    <button type="button" class="btn btn-success" @onclick="ConfirmarEdicionIngreso">Confirmar</button>
+    <button type="button" class="btn btn-danger" @onclick="CancelarEdicion">Cancelar</button>
+</form>
 }
 
 @code {
     [Parameter]
+    public string Tipo { get; set; }
+
+    [Parameter]
     public string Id { get; set; }
 
     private Modelo gasto;
+    private Modelo ingreso;
 
     protected override async Task OnInitializedAsync()
     {
         var httpClient = new HttpClient();
 
-        var gastoResponse = await httpClient.GetFromJsonAsync<Modelo>($"http://host.docker.internal:4000/api/Gastos/{Id}");
-        if (gastoResponse != null)
+        if(Tipo == "Gasto")
         {
-            gasto = gastoResponse;
+            var gastoResponse = await httpClient.GetFromJsonAsync<Modelo>($"http://host.docker.internal:4000/api/Gastos/{Id}");
+            if (gastoResponse != null)
+            {
+                gasto = gastoResponse;
+            }
         }
+        else
+        {
+            var ingresoResponse = await httpClient.GetFromJsonAsync<Modelo>($"http://host.docker.internal:5000/api/Ingresos/{Id}");
+            if (ingresoResponse != null)
+            {
+                ingreso = ingresoResponse;
+            }
+        }
+
     }
 
-    private async Task ConfirmarEdicion()
+    private async Task ConfirmarEdicionGasto()
     {
         var httpClient = new HttpClient();
 
-        var response = await httpClient.PutAsJsonAsync($"http://host.docker.internal:4000/api/Gastos/{Id}", gasto);
-        
-        if (response.IsSuccessStatusCode)
+        var responseGasto = await httpClient.PutAsJsonAsync($"http://host.docker.internal:4000/api/Gastos/{Id}", gasto);
+        if (responseGasto.IsSuccessStatusCode)
         {
             NavigationManager.NavigateTo("/");
         }
     }
+    private async Task ConfirmarEdicionIngreso()
+    {
+        var httpClient = new HttpClient();
 
+        var responseIngreso = await httpClient.PutAsJsonAsync($"http://host.docker.internal:5000/api/Ingresos/{Id}", ingreso);
+        if (responseIngreso.IsSuccessStatusCode)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+    }
     private void CancelarEdicion()
     {
         NavigationManager.NavigateTo("/");
