@@ -13,8 +13,8 @@ namespace Model
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
-
+        public string? Id { get; set; }
+        
         [BsonElement("fecha")]
         public DateTime Fecha { get; set; }
 

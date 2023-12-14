@@ -41,8 +41,9 @@ private async Task Agregar()
     {
         var httpClient = new HttpClient();
 
-        var responseGasto = await httpClient.PostAsJsonAsync("http://host.docker.internal:4000/api/Gastos", new Modelo { Fecha = fechaGasto, Tipo = tipoGasto, Descripcion = descripcionGasto, Monto = montoGasto });
-
+            var responseGasto = await httpClient.PostAsJsonAsync("http://host.docker.internal:4000/api/Gastos", new Modelo { Fecha = fechaGasto, Tipo = tipoGasto, Descripcion = descripcionGasto, Monto = montoGasto });
+            var responseContent = await responseGasto.Content.ReadAsStringAsync();
+            Console.WriteLine($"Response Content: {responseContent}");
         if (responseGasto.IsSuccessStatusCode)
         {
             NavigationManager.NavigateTo("/");

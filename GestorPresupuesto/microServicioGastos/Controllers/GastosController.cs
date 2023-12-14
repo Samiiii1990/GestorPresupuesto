@@ -35,12 +35,23 @@ namespace microServicioGastos.Controllers
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post(Modelo newGasto)
+    public async Task<ActionResult<Modelo>> Post([FromBody] Modelo newGasto)
+    {
+    try
     {
         Console.WriteLine(newGasto);
+        // Allow MongoDB to generate the Id
+        newGasto.Id = null;
+
         await _gastoService.CreateAsync(newGasto);
 
         return CreatedAtAction(nameof(Get), new { id = newGasto.Id }, newGasto);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error: {ex.Message}");
+        return BadRequest(); // or return an appropriate error response
+    }
     }
 
     [HttpPut("{id:length(24)}")]
