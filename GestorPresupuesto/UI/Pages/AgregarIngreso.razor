@@ -42,8 +42,9 @@
     {
         var httpClient = new HttpClient();
 
-        var responseIngreso = await httpClient.PutAsJsonAsync($"http://host.docker.internal:5000/api/Ingresos", new Modelo { Fecha=fechaIngreso, Tipo=tipoIngreso, Descripcion=descripcionIngreso, Monto=montoIngreso});
-        
+        var responseIngreso = await httpClient.PostAsJsonAsync($"http://host.docker.internal:5000/api/Ingresos", new Modelo { Fecha = fechaIngreso, Tipo = tipoIngreso, Descripcion = descripcionIngreso, Monto = montoIngreso });
+            var responseContent = await responseIngreso.Content.ReadAsStringAsync();
+            Console.WriteLine($"Response Content: {responseContent}");
         if (responseIngreso.IsSuccessStatusCode)
         {
             NavigationManager.NavigateTo("/");

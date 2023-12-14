@@ -39,8 +39,6 @@ namespace microServicioGastos.Controllers
     {
     try
     {
-        Console.WriteLine(newGasto);
-        // Allow MongoDB to generate the Id
         newGasto.Id = null;
 
         await _gastoService.CreateAsync(newGasto);
@@ -50,7 +48,7 @@ namespace microServicioGastos.Controllers
     catch (Exception ex)
     {
         Console.WriteLine($"Error: {ex.Message}");
-        return BadRequest(); // or return an appropriate error response
+        return BadRequest(); 
     }
     }
 

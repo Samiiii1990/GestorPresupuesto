@@ -35,12 +35,22 @@ namespace microServicioIngresos.Controllers
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post(Modelo newIngreso)
+     public async Task<ActionResult<Modelo>> Post([FromBody ] Modelo newIngreso)
     {
-        Console.WriteLine(newIngreso);
+    try
+    {
+        newIngreso.Id = null;
+
         await _ingresoService.CreateAsync(newIngreso);
 
         return CreatedAtAction(nameof(Get), new { id = newIngreso.Id }, newIngreso);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error: {ex.Message}");
+        return BadRequest(); 
+    }
+
     }
 
     [HttpPut("{id:length(24)}")]

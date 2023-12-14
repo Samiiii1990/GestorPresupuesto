@@ -15,7 +15,7 @@ namespace Model
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
         
-        [BsonElement("fecha")]
+        [BsonElement("Date")]
         public DateTime Fecha { get; set; }
 
         [BsonElement("tipo")]
