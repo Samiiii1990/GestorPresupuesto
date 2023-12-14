@@ -72,7 +72,7 @@ else
         </table>
     }
 }
-
+<button class="btn btn-primary" @onclick="AgregarGasto">Agregar Gasto</button>
 
 @code {
     private List<Modelo> _gastos = new List<Modelo>();
@@ -168,6 +168,11 @@ else
             Console.WriteLine($"Error al eliminar gasto: {ex.Message}");
         }
     }
+    private void AgregarGasto()
+    {
+        NavigationManager.NavigateTo($"/agregarGasto");
+    }
+
 
 
 }

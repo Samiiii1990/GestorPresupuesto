@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc;
 using Model;
 using MongoDB.Driver;
+using microServicioGastos.Services;
 
 namespace microServicioGastos.Controllers
 {
@@ -11,79 +12,68 @@ namespace microServicioGastos.Controllers
     [Route("api/[controller]")]
     public class GastosController : ControllerBase
     {
-        private readonly MongoDBContext _context;
+     private readonly GastosServices _gastoService;
 
-        public GastosController(MongoDBContext context)
+     public GastosController(GastosServices gastoService) =>
+        _gastoService = gastoService;
+
+    [HttpGet]
+    public async Task<List<Modelo>> Get() =>
+        await _gastoService.GetAsync();
+
+    [HttpGet("{id:length(24)}")]
+    public async Task<ActionResult<Modelo>> Get(string id)
+    {
+        var gasto = await _gastoService.GetAsync(id);
+
+        if (gasto is null)
         {
-            _context = context;
+            return NotFound();
         }
 
-        [HttpGet]
-        public async Task<IEnumerable<Modelo>> Get()
+        return gasto;
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Post(Modelo newGasto)
+    {
+        Console.WriteLine(newGasto);
+        await _gastoService.CreateAsync(newGasto);
+
+        return CreatedAtAction(nameof(Get), new { id = newGasto.Id }, newGasto);
+    }
+
+    [HttpPut("{id:length(24)}")]
+    public async Task<IActionResult> Update(string id, Modelo updatedGasto)
+    {
+        var gasto = await _gastoService.GetAsync(id);
+
+        if (gasto is null)
         {
-            return await _context.Gastos.Find(_ => true).ToListAsync();
+            return NotFound();
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Modelo>> Get(string id)
+        updatedGasto.Id = gasto.Id;
+
+        await _gastoService.UpdateAsync(id, updatedGasto);
+
+        return NoContent();
+    }
+
+    [HttpDelete("{id:length(24)}")]
+    public async Task<IActionResult> Delete(string id)
+    {
+        Console.WriteLine(id);
+        var gasto = await _gastoService.GetAsync(id);
+        Console.WriteLine(gasto);
+        if (gasto is null)
         {
-            var gasto =
-                await _context
-                    .Gastos
-                    .Find(p => p.Id == id)
-                    .FirstOrDefaultAsync();
-
-            if (gasto == null)
-            {
-                return NotFound();
-            }
-
-            return gasto;
+            return NotFound();
         }
 
-        [HttpPost]
-        public async Task<ActionResult<Modelo>> Create(Modelo gasto)
-        {
-            await _context.Gastos.InsertOneAsync(gasto);
-            return CreatedAtRoute(new { id = gasto.Id }, gasto);
-        }
+        await _gastoService.RemoveAsync(id);
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(string id, Modelo gastoIn)
-        {
-            var gasto =
-                await _context
-                    .Gastos
-                    .Find(p => p.Id == id)
-                    .FirstOrDefaultAsync();
-
-            if (gasto == null)
-            {
-                return NotFound();
-            }
-
-            await _context.Gastos.ReplaceOneAsync(p => p.Id == id, gastoIn);
-
-            return NoContent();
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(string id)
-        {
-            var gasto =
-                await _context
-                    .Gastos
-                    .Find(p => p.Id == id)
-                    .FirstOrDefaultAsync();
-
-            if (gasto == null)
-            {
-                return NotFound();
-            }
-
-            await _context.Gastos.DeleteOneAsync(p => p.Id == id);
-
-            return NoContent();
-        }
+        return NoContent();
+    }
     }
 }

@@ -2,18 +2,16 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using Model;
+using microServicioGastos.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Register services here
-builder.Services.Configure<MongoDBSettings>(builder.Configuration.GetSection(nameof(MongoDBSettings)));
+builder.Services.Configure<MongoDBSettings>(builder.Configuration.GetSection("MongoDBSettings"));
 
-builder.Services.AddSingleton<MongoDBContext>(serviceProvider =>
-{
-    var settings = serviceProvider.GetRequiredService<IOptions<MongoDBSettings>>().Value;
-    return new MongoDBContext(settings.ConnectionString, settings.DatabaseName);
-});
 
+builder.Services.AddSingleton<GastosServices>();
 // Add controllers
 builder.Services.AddControllers();
 

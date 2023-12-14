@@ -1,0 +1,66 @@
+@page "/agregarGasto"
+@using Model
+@inject NavigationManager NavigationManager
+
+
+<PageTitle>Agregar</PageTitle>
+
+
+<h1>Agregar Gasto</h1>
+
+<form>
+    <div class="mb-3">
+        <label for="fecha" class="form-label">Fecha:</label>
+        <input type="date" class="form-control" id="fecha" @bind="fechaGasto"/>
+    </div>
+    <div class="mb-3">
+        <label for="descripcion" class="form-label">Descripcion:</label>
+        <input type="text" id="descripcion" class="form-control" @bind="descripcionGasto" />
+    </div>
+    <div class="mb-3">
+        <label for="monto" class="form-label">Monto:</label>
+        <input type="text" id="monto" class="form-control" @bind="montoGasto" />
+    </div>
+
+    <button type="button" class="btn btn-success" @onclick="Agregar">Agregar</button>
+    <button type="button" class="btn btn-danger" @onclick="Cancelar">Cancelar</button>
+</form>
+
+@code {
+
+    private DateTime fechaGasto = DateTime.Now;
+    private string tipoGasto = "Gasto";
+    private string descripcionGasto = "";
+    private int montoGasto = 0;
+
+
+
+private async Task Agregar()
+{
+    try
+    {
+        var httpClient = new HttpClient();
+
+        var responseGasto = await httpClient.PostAsJsonAsync("http://host.docker.internal:4000/api/Gastos", new Modelo { Fecha = fechaGasto, Tipo = tipoGasto, Descripcion = descripcionGasto, Monto = montoGasto });
+
+        if (responseGasto.IsSuccessStatusCode)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+        else
+        {
+            var errorMessage = $"Failed to add Gasto. Status Code: {responseGasto.StatusCode}";
+        }
+    }
+    catch (Exception ex)
+    {
+        var errorMessage = $"An unexpected error occurred: {ex.Message}";
+    }
+}
+
+
+    private void Cancelar()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+}
