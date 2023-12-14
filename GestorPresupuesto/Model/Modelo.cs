@@ -15,16 +15,16 @@ namespace Model
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
 
-        [BsonElement("Date")]
+        [BsonElement("fecha")]
         public DateTime Fecha { get; set; }
 
-        [BsonElement("Type")]
+        [BsonElement("tipo")]
         public string Tipo { get; set; }
 
-        [BsonElement("Description")]
+        [BsonElement("description")]
         public string Descripcion { get; set; }
 
-        [BsonElement("Mount")]
+        [BsonElement("monto")]
         public int Monto { get; set; }
 
         public Modelo(
