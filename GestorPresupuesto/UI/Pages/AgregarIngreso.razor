@@ -1,62 +1,65 @@
-@page "/agregarGasto"
+@page "/agregarIngreso"
 @using Model
 @inject NavigationManager NavigationManager
 
 
 <PageTitle>Agregar</PageTitle>
 
-
-<h1>Agregar Gasto</h1>
+<h1>Agregar Ingreso</h1>
 
 <form>
     <div class="mb-3">
         <label for="fecha" class="form-label">Fecha:</label>
-        <input type="date" class="form-control" id="fecha" @bind="fechaGasto"/>
+        <input type="date" class="form-control" id="fecha" @bind="fechaIngreso"/>
     </div>
     <div class="mb-3">
         <label for="descripcion" class="form-label">Descripcion:</label>
-        <input type="text" id="descripcion" class="form-control" @bind="descripcionGasto" />
+        <input type="text" id="descripcion" class="form-control" @bind="descripcionIngreso" />
     </div>
     <div class="mb-3">
         <label for="monto" class="form-label">Monto:</label>
-        <input type="text" id="monto" class="form-control" @bind="montoGasto" />
+        <input type="text" id="monto" class="form-control" @bind="montoIngreso" />
     </div>
 
     <button type="button" class="btn btn-success" @onclick="Agregar">Agregar</button>
     <button type="button" class="btn btn-danger" @onclick="Cancelar">Cancelar</button>
 </form>
 
+
 @code {
 
-    private DateTime fechaGasto = DateTime.Now;
-    private string tipoGasto = "Gasto";
-    private string descripcionGasto = "";
-    private int montoGasto = 0;
+    private DateTime fechaIngreso = DateTime.Now;
+    private string tipoIngreso = "Ingreso";
+    private string descripcionIngreso = "";
+    private int montoIngreso = 0;
 
 
 
-private async Task Agregar()
-{
-    try
+
+    private async Task Agregar()
+    {
+           try
     {
         var httpClient = new HttpClient();
 
-        var responseGasto = await httpClient.PostAsJsonAsync("http://host.docker.internal:4000/api/Gastos", new Modelo { Fecha = fechaGasto, Tipo = tipoGasto, Descripcion = descripcionGasto, Monto = montoGasto });
-
-        if (responseGasto.IsSuccessStatusCode)
+        var responseIngreso = await httpClient.PutAsJsonAsync($"http://host.docker.internal:5000/api/Ingresos", new Modelo { Fecha=fechaIngreso, Tipo=tipoIngreso, Descripcion=descripcionIngreso, Monto=montoIngreso});
+        
+        if (responseIngreso.IsSuccessStatusCode)
         {
             NavigationManager.NavigateTo("/");
         }
         else
         {
-            var errorMessage = $"Error al agregar gasto: {responseGasto.StatusCode}";
+            var errorMessage = $"Error al agregar ingreso: {responseIngreso.StatusCode}";
         }
     }
     catch (Exception ex)
     {
         var errorMessage = $"Error: {ex.Message}";
     }
-}
+
+
+    }
 
 
     private void Cancelar()

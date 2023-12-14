@@ -10,6 +10,7 @@
 <h1>Gestor Presupuesto</h1>
 
 
+
 @if (_gastos.Count == 0 && _ingresos.Count == 0)
 {
     <p><em>No hay datos para mostrar...</em></p>
@@ -33,7 +34,6 @@ else
     <thead>
         <tr>
             <th>Id</th>
-            <th>Fecha</th>
             <th>Tipo</th>
             <th>Descripcion</th>
             <th>Monto</th>
@@ -49,7 +49,6 @@ else
                 {
                     <tr>
                         <td>@item.Id</td>
-                        <td>@item.Fecha.ToString("dd/MM/yyyy")</td>
                         <td>@item.Tipo</td>
                         <td>@item.Descripcion</td>
                         <td>$@(item.Tipo == "Ingreso" ? item.Monto : -item.Monto)</td>
@@ -58,8 +57,8 @@ else
                         }
                         <td>$@runningTotal</td>
                         <td>
-                            <button class="btn btn-warning" @onclick="() => EditarGasto(item.Tipo,item.Id)">Editar</button>
-                            <button class="btn btn-danger" @onclick="() => EliminarGasto(item.Id)">Eliminar</button>
+                            <button class="btn btn-warning" @onclick="() => EditarMovimiento(item.Tipo, item.Id)">Editar</button>
+                            <button class="btn btn-danger" @onclick="() => Eliminar(item)">Eliminar</button>
                         </td>
                     </tr>
 
@@ -70,9 +69,12 @@ else
                 </tr>
             </tbody>
         </table>
+
+        <button class="btn btn-primary" @onclick="AgregarIngreso">Agregar Ingreso</button>
+        <button class="btn btn-primary" @onclick="AgregarGasto">Agregar Gasto</button>
     }
 }
-<button class="btn btn-primary" @onclick="AgregarGasto">Agregar Gasto</button>
+
 
 @code {
     private List<Modelo> _gastos = new List<Modelo>();
@@ -142,10 +144,34 @@ else
             }
         }
     }
-    private void EditarGasto(string tipo, string gastoId)
+        private void AgregarIngreso()
     {
-        NavigationManager.NavigateTo($"/editar/{tipo}/{gastoId}");
+        NavigationManager.NavigateTo($"/agregarIngreso");
     }
+
+    private void AgregarGasto()
+    {
+        NavigationManager.NavigateTo($"/agregarGasto");
+    }
+
+
+    private void EditarMovimiento(string tipo, string id)
+    {
+        NavigationManager.NavigateTo($"/editar/{tipo}/{id}");
+    }
+
+    private void Eliminar(Modelo item)
+{
+    if (item.Tipo == "Ingreso")
+    {
+        EliminarIngreso(item.Id);
+    }
+    else
+    {
+        EliminarGasto(item.Id);
+    }
+}
+
     private async Task EliminarGasto(string id)
     {
         var httpClient = new HttpClient();
@@ -167,12 +193,30 @@ else
         {
             Console.WriteLine($"Error al eliminar gasto: {ex.Message}");
         }
-    }
-    private void AgregarGasto()
-    {
-        NavigationManager.NavigateTo($"/agregarGasto");
-    }
 
+    }
+        private async Task EliminarIngreso(string id)
+    {
+        var httpClient = new HttpClient();
+
+          try
+        {
+            var response = await httpClient.DeleteAsync($"http://host.docker.internal:5000/api/Ingresos/{id}");
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                var ingresosResponse = await httpClient.GetFromJsonAsync<List<Modelo>>("http://host.docker.internal:5000/api/Ingresos");
+                if (ingresosResponse != null)
+                {
+                    _ingresos = ingresosResponse;
+                }
+            }
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al eliminar ingreso: {ex.Message}");
+        }
+    }
 
 
 }
